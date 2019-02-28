@@ -1,5 +1,6 @@
 package com.example.feggetsberger16.feggetsberger16woche22;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,12 +50,21 @@ public class MainActivity extends AppCompatActivity {
         double price = Double.parseDouble(np.getText().toString());
         String sDate = date.format(dtf);
         //printToString(sDate,art,price,kat);
-        writeToCsv();
+        Context c = new MainActivity();
+        writeToCsv(c);
     }
 
-    private void writeToCsv()
+    private void writeToCsv(Context context)
     {
-        
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(context.openFileOutput("values.csv",Context.MODE_PRIVATE));
+            for (int i = 0; i < ; i++) {
+                
+            }
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void printToString(String date,String art,Double price,String kat)
