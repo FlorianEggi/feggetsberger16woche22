@@ -10,8 +10,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -40,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
         listArt.add("Einnahmen");
         listArt.add("Ausgaben");
         cash = 4711;
-        eintraegeAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,eintraege);
-        ArrayAdapter<String> artAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,listArt);
+        eintraegeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, eintraege);
+        ArrayAdapter<String> artAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listArt);
         artAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sArt.setAdapter(artAdapter);
         lv.setAdapter(eintraegeAdapter);
-        List<String> listKat = createKategorien();
-        ArrayAdapter<String> katAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,listKat);
+        List<String> listKat = readKat();
+        ArrayAdapter<String> katAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listKat);
         katAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sKat.setAdapter(katAdapter);
         np = findViewById(R.id.numberPicker);
@@ -54,92 +57,85 @@ public class MainActivity extends AppCompatActivity {
         lvc.setText(s);
     }
 
-    public void onClickButton(View view)
-    {
+    public void onClickButton(View view) {
         TextView tDate = findViewById(R.id.date);
         String s = tDate.getText().toString();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        LocalDate date = LocalDate.parse(s,dtf);
+        LocalDate date = LocalDate.parse(s, dtf);
         System.out.println(sArt.getSelectedItem().toString());
         String kat = sKat.getSelectedItem().toString();
         String art = sArt.getSelectedItem().toString();
-
         double price = Double.parseDouble(np.getText().toString());
         String sDate = date.format(dtf);
         //printToString(sDate,art,price,kat);
         Context c = new MainActivity();
-        if(date == null || art.equals("") || art==null || price == 0 || kat.equals("") || kat.equals(null))
-        {
-            Toast.makeText(MainActivity.this,"invalid data",Toast.LENGTH_LONG).show();
+        if (date == null || art.equals("") || art == null || price == 0 || kat.equals("") || kat.equals(null)) {
+            Toast.makeText(MainActivity.this, "invalid data", Toast.LENGTH_LONG).show();
         }
         String zeichen;
         zeichen = "";
-        if("Einnahmen".equals(kat))
-        {
+        if ("Einnahmen".equals(art)) {
             zeichen = "+";
 
         }
-        else
-        {
+        if ("Ausgaben".equals(art)) {
             zeichen = "-";
         }
-        Eintrag e = new Eintrag(date,art,price,kat,zeichen);
-        if("+".equals(zeichen))
-        {
-            cash = cash+price;
+        Eintrag e = new Eintrag(date, art, price, kat, zeichen);
+        if ("+".equals(zeichen)) {
+            cash = cash + price;
         }
-        if("-".equals(zeichen))
-        {
-            cash = cash-price;
+        if ("-".equals(zeichen)) {
+            cash = cash - price;
         }
         String s2 = cash + " €";
         lvc.setText(s2);
         eintraegeAdapter.add(e.toString());
         lv.setAdapter(eintraegeAdapter);
-        //writeToCsv(c,e);
+        writeToCsv(e);
     }
 
-    private void writeToCsv(Context context,Eintrag e)
-    {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        try {
-            OutputStreamWriter writer = new OutputStreamWriter(context.openFileOutput("values.csv",Context.MODE_PRIVATE));
-            writer.write(e.getDate().format(dtf));
-            writer.write(e.getArt());
-            writer.write(String.valueOf(e.getPrice()));
-            writer.write(e.getKat());
-        }catch (IOException ex)
+    private void writeToCsv(Eintrag e) {
+        try{
+            FileOutputStream fos = openFileOutput("values.txt",MODE_APPEND);
+            PrintWriter wr = new PrintWriter((new OutputStreamWriter(fos)));
+            wr.write(e.toString());
+            System.out.println("written");
+            wr.flush();
+            System.out.println("flushed");
+            wr.close();
+            System.out.println("closed");
+        }
+        catch(Exception ex)
         {
-            ex.printStackTrace();
+
         }
     }
 
-    private void printToString(String date,String art,Double price,String kat)
-    {
-        String s = "Am " + date + " " + art + " von " + price + " Euro für " +kat;
+    private void printToString(String date, String art, Double price, String kat) {
+        String s = "Am " + date + " " + art + " von " + price + " Euro für " + kat;
         System.out.println(s);
     }
 
-    private boolean dateIsValid(String s)
-    {
-        if(s.contains("."))
-        {
+    private boolean dateIsValid(String s) {
+        if (s.contains(".")) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    private List<String> createKategorien()
-    {
+    private List<String> readKat() {
+
         List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("Bank");
-        list.add("Lebensmittel");
-        list.add("Frisör");
-        //Hier fehlt noch das einlesen von gridview
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("kategorien.txt")));
+            String s;
+            while ((s = br.readLine())!=null){
+                list.add(s);
+            }
+        } catch (Exception ex) {
+        }
         return list;
     }
 }
