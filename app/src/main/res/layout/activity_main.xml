@@ -10,18 +10,15 @@
         android:id="@+id/textViewCash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="140dp"
-        android:layout_marginStart="140dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="36dp"
         android:layout_weight="1"
-        android:text="CA$H 0,00€"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:text="CA$H"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner2"
         tools:textSize="20sp" />
-        tools:layout_editor_absoluteX="226dp"
-        tools:layout_editor_absoluteY="371dp" />
+    tools:layout_editor_absoluteX="226dp"
+    tools:layout_editor_absoluteY="371dp" />
 
     <TextView
         android:id="@+id/textViewEuroFor"
@@ -33,8 +30,8 @@
         app:layout_constraintStart_toEndOf="@+id/textViewVon"
         app:layout_constraintTop_toBottomOf="@+id/spinner"
         tools:textSize="20sp" />
-        tools:layout_editor_absoluteX="156dp"
-        tools:layout_editor_absoluteY="144dp" />
+    tools:layout_editor_absoluteX="156dp"
+    tools:layout_editor_absoluteY="144dp" />
 
     <TextView
         android:id="@+id/textViewVon"
@@ -71,8 +68,8 @@
         android:id="@+id/spinner2"
         android:layout_width="170dp"
         android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewVon" />
 
@@ -80,8 +77,8 @@
         android:id="@+id/button"
         android:layout_width="56dp"
         android:layout_height="36dp"
-        android:layout_marginStart="124dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="20dp"
         android:onClick="onClickButton"
         android:text="OK"
         app:layout_constraintStart_toEndOf="@+id/spinner2"
@@ -112,9 +109,28 @@
         app:layout_constraintTop_toBottomOf="@+id/date" />
 
     <ListView
-        android:layout_width="326dp"
+        android:id="@+id/listView"
+        android:layout_width="304dp"
         android:layout_height="437dp"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="256dp" />
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="43dp"
+        android:layout_marginBottom="38dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCash"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textViewMoney"
+        android:layout_width="54dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="38dp"
+        app:layout_constraintStart_toEndOf="@+id/textViewCash"
+        app:layout_constraintTop_toBottomOf="@+id/spinner2"
+        tools:textSize="20sp" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.feggetsberger16.feggetsberger16woche22;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by feggetsberger16 on 28.02.2019.
@@ -11,12 +12,15 @@ public class Eintrag {
     String art;
     double price;
     String kat;
+    String vorzeichen;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public Eintrag(LocalDate date, String art, double price, String kat) {
+    public Eintrag(LocalDate date, String art, double price, String kat,String vorzeichen) {
         this.date = date;
         this.art = art;
         this.price = price;
         this.kat = kat;
+        this.vorzeichen = vorzeichen;
     }
 
     public LocalDate getDate() {
@@ -49,5 +53,10 @@ public class Eintrag {
 
     public void setKat(String kat) {
         this.kat = kat;
+    }
+
+    @Override
+    public String toString() {
+        return date.format(dtf) + "   " + vorzeichen + price+ "€" + "   " + kat;
     }
 }

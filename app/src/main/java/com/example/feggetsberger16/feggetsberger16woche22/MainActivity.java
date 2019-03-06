@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,22 +21,37 @@ public class MainActivity extends AppCompatActivity {
     Spinner sArt;
     Spinner sKat;
     TextView np;
+    ListView lv;
+    TextView lvc;
+    List<String> eintraege;
+    ArrayAdapter<String> eintraegeAdapter;
+    double cash;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sArt = findViewById(R.id.spinner);
         sKat = findViewById(R.id.spinner2);
+        lv = findViewById(R.id.listView);
+        lvc = findViewById(R.id.textViewMoney);
+        eintraege = new ArrayList<>();
         List<String> listArt = new ArrayList<>();
         listArt.add("Einnahmen");
         listArt.add("Ausgaben");
-        ArrayAdapter<String> artAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listArt);
+        cash = 4711;
+        eintraegeAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,eintraege);
+        ArrayAdapter<String> artAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,listArt);
         artAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sArt.setAdapter(artAdapter);
+        lv.setAdapter(eintraegeAdapter);
         List<String> listKat = createKategorien();
-        ArrayAdapter<String> katAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listKat);
+        ArrayAdapter<String> katAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,listKat);
+        katAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sKat.setAdapter(katAdapter);
         np = findViewById(R.id.numberPicker);
+        String s = cash + " €";
+        lvc.setText(s);
     }
 
     public void onClickButton(View view)
@@ -56,8 +72,31 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(MainActivity.this,"invalid data",Toast.LENGTH_LONG).show();
         }
-        Eintrag e = new Eintrag(date,art,price,kat);
-        writeToCsv(c,e);
+        String zeichen;
+        zeichen = "";
+        if("Einnahmen".equals(kat))
+        {
+            zeichen = "+";
+
+        }
+        else
+        {
+            zeichen = "-";
+        }
+        Eintrag e = new Eintrag(date,art,price,kat,zeichen);
+        if("+".equals(zeichen))
+        {
+            cash = cash+price;
+        }
+        if("-".equals(zeichen))
+        {
+            cash = cash-price;
+        }
+        String s2 = cash + " €";
+        lvc.setText(s2);
+        eintraegeAdapter.add(e.toString());
+        lv.setAdapter(eintraegeAdapter);
+        //writeToCsv(c,e);
     }
 
     private void writeToCsv(Context context,Eintrag e)
