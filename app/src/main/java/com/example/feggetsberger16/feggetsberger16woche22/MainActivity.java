@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             kat = ownKat.getText().toString();
-            writeKatToCsv(kat);
+            writeKatToCsv(ownKat.getText().toString());
         }
         String art = sArt.getSelectedItem().toString();
         double price = Double.parseDouble(np.getText().toString());
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     private void resetAllFields()
     {
         lvc.setText("");
-        
+
     }
 
     private void writeKatToCsv(String s)
@@ -125,10 +126,6 @@ public class MainActivity extends AppCompatActivity {
         try{
             FileOutputStream fos = openFileOutput("kategorien.txt",MODE_APPEND);
             PrintWriter wr = new PrintWriter((new OutputStreamWriter(fos)));
-            if(katCounter == 0)
-            {
-                wr.println();
-            }
             wr.println(s);
             wr.flush();
             wr.close();
@@ -175,10 +172,14 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> list = new ArrayList<>();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("kategorien.txt")));
+            FileInputStream fis = openFileInput("kategorien.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
             String s;
-            while ((s = br.readLine())!=null){
-                list.add(s);
+            while(true)
+            {
+                String line = br.readLine();
+                if(line==null) break;
+                list.add(line);
             }
         } catch (Exception ex) {
         }

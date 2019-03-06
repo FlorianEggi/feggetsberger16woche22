@@ -124,7 +124,7 @@
 
     <TextView
         android:id="@+id/textViewMoney"
-        android:layout_width="54dp"
+        android:layout_width="192dp"
         android:layout_height="26dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="38dp"
