@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -51,19 +52,26 @@ public class MainActivity extends AppCompatActivity {
         String sDate = date.format(dtf);
         //printToString(sDate,art,price,kat);
         Context c = new MainActivity();
-        writeToCsv(c);
+        if(date == null || art.equals("") || art==null || price == 0 || kat.equals("") || kat.equals(null))
+        {
+            Toast.makeText(MainActivity.this,"invalid data",Toast.LENGTH_LONG).show();
+        }
+        Eintrag e = new Eintrag(date,art,price,kat);
+        writeToCsv(c,e);
     }
 
-    private void writeToCsv(Context context)
+    private void writeToCsv(Context context,Eintrag e)
     {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         try {
             OutputStreamWriter writer = new OutputStreamWriter(context.openFileOutput("values.csv",Context.MODE_PRIVATE));
-            for (int i = 0; i < ; i++) {
-                
-            }
-        }catch (IOException e)
+            writer.write(e.getDate().format(dtf));
+            writer.write(e.getArt());
+            writer.write(String.valueOf(e.getPrice()));
+            writer.write(e.getKat());
+        }catch (IOException ex)
         {
-            e.printStackTrace();
+            ex.printStackTrace();
         }
     }
 
