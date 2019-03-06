@@ -66,7 +66,7 @@
 
     <Spinner
         android:id="@+id/spinner2"
-        android:layout_width="170dp"
+        android:layout_width="114dp"
         android:layout_height="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="28dp"
@@ -77,12 +77,11 @@
         android:id="@+id/button"
         android:layout_width="56dp"
         android:layout_height="36dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:onClick="onClickButton"
         android:text="OK"
-        app:layout_constraintStart_toEndOf="@+id/spinner2"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEuroFor" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewEuroFor"
+        tools:layout_editor_absoluteX="314dp" />
 
     <EditText
         android:id="@+id/date"
@@ -132,5 +131,17 @@
         app:layout_constraintStart_toEndOf="@+id/textViewCash"
         app:layout_constraintTop_toBottomOf="@+id/spinner2"
         tools:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/textViewOwnKat"
+        android:layout_width="126dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Sonstige..."
+        android:inputType="text"
+        app:layout_constraintStart_toEndOf="@+id/spinner2"
+        app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
 
 </android.support.constraint.ConstraintLayout>

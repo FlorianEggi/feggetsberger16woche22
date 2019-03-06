@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     List<String> eintraege;
     ArrayAdapter<String> eintraegeAdapter;
     double cash;
+    int eintragCounter;
+    int katCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         listArt.add("Einnahmen");
         listArt.add("Ausgaben");
         cash = 4711;
+        eintragCounter = 0;
+        katCounter = 0;
         eintraegeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, eintraege);
         ArrayAdapter<String> artAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listArt);
         artAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -63,13 +67,23 @@ public class MainActivity extends AppCompatActivity {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate date = LocalDate.parse(s, dtf);
         System.out.println(sArt.getSelectedItem().toString());
-        String kat = sKat.getSelectedItem().toString();
+        TextView ownKat = findViewById(R.id.textViewOwnKat);
+        String kat;
+        if(ownKat == null || "".equals(ownKat))
+        {
+            kat = sKat.getSelectedItem().toString();
+        }
+        else
+        {
+            kat = ownKat.getText().toString();
+            writeKatToCsv(kat);
+        }
         String art = sArt.getSelectedItem().toString();
         double price = Double.parseDouble(np.getText().toString());
         String sDate = date.format(dtf);
         //printToString(sDate,art,price,kat);
         Context c = new MainActivity();
-        if (date == null || art.equals("") || art == null || price == 0 || kat.equals("") || kat.equals(null)) {
+        if (date == null || art.equals("") || art == null || price == 0) {
             Toast.makeText(MainActivity.this, "invalid data", Toast.LENGTH_LONG).show();
         }
         String zeichen;
@@ -93,23 +107,55 @@ public class MainActivity extends AppCompatActivity {
         eintraegeAdapter.add(e.toString());
         lv.setAdapter(eintraegeAdapter);
         writeToCsv(e);
+        List<String> listKat = readKat();
+        ArrayAdapter<String> katAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listKat);
+        katAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sKat.setAdapter(katAdapter);
+        resetAllFields();
     }
 
-    private void writeToCsv(Eintrag e) {
+    private void resetAllFields()
+    {
+        lvc.setText("");
+        
+    }
+
+    private void writeKatToCsv(String s)
+    {
         try{
-            FileOutputStream fos = openFileOutput("values.txt",MODE_APPEND);
+            FileOutputStream fos = openFileOutput("kategorien.txt",MODE_APPEND);
             PrintWriter wr = new PrintWriter((new OutputStreamWriter(fos)));
-            wr.write(e.toString());
-            System.out.println("written");
+            if(katCounter == 0)
+            {
+                wr.println();
+            }
+            wr.println(s);
             wr.flush();
-            System.out.println("flushed");
             wr.close();
-            System.out.println("closed");
         }
         catch(Exception ex)
         {
 
         }
+        katCounter++;
+    }
+
+    private void writeToCsv(Eintrag e) {
+        try{
+            FileOutputStream fos = openFileOutput("values.csv",MODE_APPEND);
+            PrintWriter wr = new PrintWriter((new OutputStreamWriter(fos)));
+            if(eintragCounter == 0) {
+                wr.println("");
+            }
+            wr.println(e.toString());
+            wr.flush();
+            wr.close();
+        }
+        catch(Exception ex)
+        {
+
+        }
+        eintragCounter++;
     }
 
     private void printToString(String date, String art, Double price, String kat) {
